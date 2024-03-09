@@ -80,7 +80,6 @@
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="RespawnableDescriptor.cs" />
         <Compile Include="ScriptAsset.cs" />
-        <Compile Include="ScriptAssetObject.cs" />
         <Compile Include="UnityLogger.cs" />
         <Compile Include="Viseme.cs" />
         <Compile Include="WhitelistedComponents.cs" />
