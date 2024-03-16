@@ -12,10 +12,11 @@
 		<script>
 			async function includeJsApi() {
 				monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-					target: monaco.languages.typescript.ScriptTarget.ES2015,
+					target: monaco.languages.typescript.ScriptTarget.ES5,
 					allowNonTsExtensions: true,
 					allowJs: true,
-					lib: [],
+					lib: ["ES5"],
+					module: monaco.languages.typescript.ModuleKind.CommonJS
 				});
 
 				let libSource = await (await fetch("./out.d.ts")).text();
