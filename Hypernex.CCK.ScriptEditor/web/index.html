@@ -10,6 +10,34 @@
 		<button id="removecode" class="pure-button pure-button-primary">Close</button>
 		<script src="monaco-editor/min/vs/loader.js"></script>
 		<script>
+			async function includeJsApi() {
+				monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+					target: monaco.languages.typescript.ScriptTarget.ES2015,
+					allowNonTsExtensions: true,
+					allowJs: true,
+					lib: [],
+				});
+
+				let libSource = await (await fetch("./out.d.ts")).text();
+				let libUri = "ts:filename/out.d.ts";
+				monaco.languages.typescript.javascriptDefaults.addExtraLib(libSource, libUri);
+				monaco.editor.createModel(libSource, "typescript", monaco.Uri.parse(libUri));
+			}
+
+			function createEditor(script, lang, theme) {
+				require.config({ paths: { vs: 'monaco-editor/min/vs' } });
+				require(['vs/editor/editor.main'], function () {
+					editor = monaco.editor.create(document.getElementById('container'), {
+						value: script,
+						language: lang,
+						theme: theme
+					});
+					includeJsApi();
+				});
+			}
+
+			createEditor("", "javascript", "vs-dark");
+
 			let editor
 			let url = new URL(window.location)
 			const id = url.searchParams.get("id")
@@ -20,14 +48,7 @@
 				let json = JSON.parse(event.data)
 				switch(json["message"]){
 					case "openscript":{
-						require.config({ paths: { vs: 'monaco-editor/min/vs' } });
-						require(['vs/editor/editor.main'], function () {
-							editor = monaco.editor.create(document.getElementById('container'), {
-								value: json["script"],
-								language: json["language"],
-								theme: json["theme"]
-							});
-						});
+						createEditor(json["script"], json["language"], json["theme"]);
 						break;
 					}
 					case "settheme":{
